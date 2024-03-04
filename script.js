@@ -92,13 +92,12 @@ function showResume(event) {
                 kLevel = kLevel + 1;
             } else {
                 kLanguages = kLanguages+1;
-                console.log(kLanguages, textareasForLanguages.length)
             }
         } );
     } else {
         const thirdMainSection = document.getElementsByClassName("third-main-section")[0];
         thirdMainSection.remove();
-        kLanguages = 0
+        kLanguages = 0;
     }
 
     if (kLanguages === textareasForLanguages.length) {
@@ -117,30 +116,17 @@ function showResume(event) {
     };
 //опыт работы 
 
-    function parseDate(event) {
-        var monthsNames = {
-            "январь": 0, "февраль": 1, "март": 2, "апрель": 3, "май": 4, "июнь": 5,
-        "июль": 6, "август": 7, "сентябрь": 8, "октябрь": 9, "ноябрь": 10, "декабрь": 11
-        };
-
-        const parts = event.split(' ');
-        const month = monthsNames[parts[0].toLowerCase()];
-        var year = parseInt(pasts[1]);
-
-        return new Date(year, month);
-    }
-
     function formatDate(dateString) {
-      var date = new Date(dateString);
-      var options = { year: 'numeric', month: 'long' };
-      return date.toLocaleDateString("ru-RU", options);
-    };
+        var date = new Date(dateString.split(","));
+        var options = { year: 'numeric', month: 'long' };
+        return date.toLocaleDateString("ru-RU", options);
+      }
 
     function parseEnd(event) {
         if (event.value === '') {
             return 'наст. время';
         } else {
-            return formatDate(event);
+            return formatDate(event.value);
         };
     };
 
@@ -153,6 +139,13 @@ function showResume(event) {
     const addingOccupation = document.getElementsByName("nameOccupation");
 
     const textareasForExperience = document.getElementsByClassName("textareas-for-experience");
+
+    let addingStartsOfWorkingX = addingStartsOfWorking
+    addingStartsOfWorkingX.forEach(addingStartOfWorking => {
+        addingStartOfWorking = new Date (addingStartOfWorking)
+
+    });
+
 
     if (textareasForExperience.length !== 1 ) {
         let kJob = 0;
@@ -169,25 +162,88 @@ function showResume(event) {
                     secondMainInfoExperienceJob.appendChild(newAddingJobTitle)
 
                 } else {
+                    newAddingJobTitle.innerHTML = ` <div class="statement-mark-job d-flex">
+                <p class="statement-mark-job-name">${addingJobTitle.value}</p><p class="statement-mark-job-date">${formatDate(addingStartsOfWorking[kJob].value)} — ${parseEnd(addingEndsOfWorking[kJob])}</p>
+            </div>
+            <p class="place-of-work">${addingPlacesOfWork[kJob].value}</p>
+            <p class="talk-about-work">${addingOccupation[kJob].value}</p>`;
+                    secondMainInfoExperienceJob.prepend(newAddingJobTitle)
+
                      
                 }
                 kJob = kJob + 1;
             } else {
-                kLanguages = kLanguages+1;
-                console.log(kLanguages, textareasForLanguages.length)
+                kExperience = kExperience+1;
             }
         } );
     } else {
-        const thirdMainSection = document.getElementsByClassName("third-main-section")[0];
-        thirdMainSection.remove();
-        kLanguages = 0
+        const secondMainInfoExperience = document.getElementsByClassName("second-main-info-Experience")[0];
+        secondMainInfoExperience.remove();
+        kExperience = 0
     }
 
-    if (kLanguages === textareasForLanguages.length) {
-        const thirdMainSection = document.getElementsByClassName("third-main-section")[0];
-        thirdMainSection.remove();
+    if (kExperience === textareasForExperience.length) {
+        const secondMainInfoExperience = document.getElementsByClassName("second-main-info-Experience")[0];
+        secondMainInfoExperience.remove();
     } 
+
+//образование
     
+    let kEducation = 1;
+    const secondMainInfoEducationHigher = document.getElementsByClassName("second-main-info-education-higher")[0];
+    const addingHighEducations = document.getElementsByName("nameHighEducation");
+    const addingStartsOfStyding = document.getElementsByName("nameStartOfStyding");
+    const addingEndsOfStyding = document.getElementsByName("nameEndOfStyding");
+    const addingPlacesOfStyding = document.getElementsByName("namePlaceOfStyding");
+    const addingAdditionalInformation = document.getElementsByName("nameAdditionalInformation");
+
+    const textareasForEducation = document.getElementsByClassName("textareas-for-education");
+
+   /* let addingStartsOfWorkingX = addingStartsOfWorking
+    addingStartsOfWorkingX.forEach(addingStartOfWorking => {
+        addingStartOfWorking = new Date (addingStartOfWorking)
+
+    });
+*/
+
+    if (textareasForEducation.length !== 1 ) {
+        let kStudy = 0;
+        addingHighEducations.forEach(addingHighEducation => {
+            if (addingHighEducation.value !== '') {
+                const newAddingHighEducation = document.createElement("div");
+                newAddingHighEducation.className = 'second-main-info-education-added';
+                if (addingStartsOfStyding[kStudy].value === '') {
+                    newAddingHighEducation.innerHTML = `<div class="statement-mark-education d-flex">
+                    <p class="statement-mark-education-name">${addingHighEducation.value}</p><p class="statement-mark-education-date">${parseEnd(addingEndsOfStyding[kStudy])}</p>
+                </div>
+                <p class="place-of-styding">${addingPlacesOfStyding[kStudy].value}</p>
+                <p class="talk-about-styding">${addingAdditionalInformation[kStudy].value}</p>`;
+                    secondMainInfoEducationHigher.appendChild(newAddingHighEducation);
+                } else {
+                    newAddingHighEducation.innerHTML = `<div class="statement-mark-education d-flex">
+                    <p class="statement-mark-education-name">${addingHighEducation.value}</p><p class="statement-mark-education-date">${formatDate(addingStartsOfStyding[kStudy].value)} — ${parseEnd(addingEndsOfStyding[kStudy])}</p>
+                </div>
+                <p class="place-of-styding">${addingPlacesOfStyding[kStudy].value}</p>
+                <p class="talk-about-styding">${addingAdditionalInformation[kStudy].value}</p>`;
+                    secondMainInfoEducationHigher.prepend(newAddingHighEducation);
+                }
+                kStudy = kStudy + 1;
+            } else {
+                kEducation = kEducation+1;
+            }
+        } );
+    } else {
+        const secondMainInfoEducation = document.getElementsByClassName("second-main-info-education")[0];
+        secondMainInfoEducation.remove();
+        kEducation = 0
+    }
+
+    if (kEducation === textareasForEducation.length) {
+        const secondMainInfoEducation = document.getElementsByClassName("second-main-info-education")[0];
+        secondMainInfoEducation.remove();
+    } 
+        
+        
 
 
 
